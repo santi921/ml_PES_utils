@@ -1,0 +1,8 @@
+# vanilla algo
+nequip-evaluate --dataset-config evaluate_1.yaml --metrics-config metrics_eval.yaml --train-dir ./results/pt_cluster_allegro_l2_full_gpu/pt_cluster_gpu_perl/ --batch-size 10 --device cpu
+
+# transfer on al2o3
+nequip-evaluate --dataset-config evaluate_2.yaml --metrics-config metrics_eval.yaml --train-dir ./results_al2o3/1/al2o3_1/ --batch-size 10 --device cpu
+
+# transfer on all 
+nequip-evaluate --dataset-config evaluate_3.yaml --metrics-config metrics_eval.yaml --train-dir ./results/transfer_on_E/transfer_1/ --batch-size 10 --device cpu

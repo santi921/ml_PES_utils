@@ -1,0 +1,28 @@
+root: results/eval
+run_name: eval_1
+
+#validation_dataset: ase
+#ase_args:
+#    format: extxyz
+#validation_dataset_file_name: al2o3_pt8_hx_test.xyz 
+
+dataset: ase                                                                       # type of data set, can be npz or ase
+dataset_file_name: ./xyz/al2o3_pt8_hx_c3h6_test_perturb.xyz                        # path to data set file
+ase_args:
+    format: extxyz
+
+chemical_symbol_to_type:
+  Al: 0
+  O: 1
+  Pt: 2
+  C: 3
+  H: 4
+
+report_init_validation: False
+validation_batch_size: 1
+r_max: 6.0
+avg_num_neighbors: auto
+batch_size: 1
+append: True
+n_train: 0
+n_val: 10                                                                                
