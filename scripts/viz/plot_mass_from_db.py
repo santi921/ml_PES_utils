@@ -1,14 +1,16 @@
-import os 
+import os
 
-import ase
+# import ase
 from ase import db
 from glob import glob
-import matplotlib.pyplot as plt
+
+# import matplotlib.pyplot as plt
 
 import numpy as np
 from ase_notebook import AseView, ViewConfig, concatenate_svgs
-from ase_notebook.backend.svg import svg_to_pdf
-import svgwrite
+
+# from ase_notebook.backend.svg import svg_to_pdf
+# import svgwrite
 
 
 def plot_db_minima(
@@ -30,9 +32,9 @@ def plot_db_minima(
     ase_view.config.canvas_background_opacity = 0.0
     svg_list = []
     energy_list = []
-    #if max_plot > 0:
+    # if max_plot > 0:
     #    rows = int(np.ceil(max_plot / cols))
-    #else:
+    # else:
     #    rows = int(np.ceil(len(minima_dbs) / cols))
 
     # fig, axs = plt.subplots(rows, cols, figsize=figsize)
@@ -47,7 +49,7 @@ def plot_db_minima(
         print("type index {}".format(type(idx)))
     else:
         idx = np.arange(db_minima.count())
-    
+
     db_sub = db_minima.select("age<2y")
 
     for i, row in enumerate(db_sub):
@@ -58,18 +60,31 @@ def plot_db_minima(
                 energy = row.energy
                 # write energy on svg
                 energy_list.append(energy)
-                svg.add(svg.text("{:.2f}".format(energy), insert=(250, 150), font_size="30px", font_family="Arial"))
-                #print(type(svg))
+                svg.add(
+                    svg.text(
+                        "{:.2f}".format(energy),
+                        insert=(250, 150),
+                        font_size="30px",
+                        font_family="Arial",
+                    )
+                )
+                # print(type(svg))
                 svg_list.append(svg)
                 count_plot += 1
         else:
-
             svg = ase_view.make_svg(atoms, center_in_uc=True)
 
             # write energy on svg
             energy = row.energy
-            energy_list.append(energy)  
-            svg.add(svg.text("{:.2f}".format(energy), insert=(250, 150), font_size="30px", font_family="Arial"))
+            energy_list.append(energy)
+            svg.add(
+                svg.text(
+                    "{:.2f}".format(energy),
+                    insert=(250, 150),
+                    font_size="30px",
+                    font_family="Arial",
+                )
+            )
             svg_list.append(svg)
 
     # tight layout
@@ -77,16 +92,15 @@ def plot_db_minima(
     sort_idx = np.argsort(energy_list)
     svg_list = [svg_list[i] for i in sort_idx]
     print("SVGS: {}".format(len(svg_list)))
-    return svg_list 
-    #return svg_list, concatenate_svgs(svg_list, max_columns=cols, scale=0.5, label=False)
+    return svg_list
+    # return svg_list, concatenate_svgs(svg_list, max_columns=cols, scale=0.5, label=False)
 
 
 def main():
-    data_root = "../../data/*db"
+    data_root = "/home/santiagovargas/dev/ml_PES_utils/data/bh_code_0913/*db"
     minima_dbs = glob(data_root)
 
     for db in minima_dbs:
-
         raw_list = plot_db_minima(
             db,
             max_plot=-1,
@@ -103,7 +117,8 @@ def main():
 
         for i, svg in enumerate(raw_list):
             svg.saveas(save_folder + "model_{}_{}.svg".format(run_name, i))
-            #svg_to_pdf(svg, save_folder + "model_{}_{}.pdf".format(run_name, i))
+            # svg_to_pdf(svg, save_folder + "model_{}_{}.pdf".format(run_name, i))
             print("saved model_{}_{}.svg".format(run_name, i))
+
 
 main()
