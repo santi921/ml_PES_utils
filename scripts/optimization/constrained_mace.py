@@ -3,8 +3,8 @@ import torch
 from ase.io import read
 from ase.constraints import FixAtoms, Hookean
 from ase.optimize.minimahopping import MinimaHopping
-
-from nequip.ase import NequIPCalculator
+from mace.calculators import mace_mp
+#from nequip.ase import NequIPCalculator
 
 
 def main():
@@ -16,7 +16,7 @@ def main():
     with open(args.options) as f:
         options = json.load(f)
 
-    model_file = options["model_file"]
+    #model_file = options["model_file"]
     atom_order = options["atom_order"]
     data_root = options["data_file"]
 
@@ -90,19 +90,20 @@ def main():
                     Hookean(a1=i, a2=j, rt=dict_bonds[key_dict], k=dict_k[key_dict])
                 )
 
-    model_str = model_file
+    
     config = {
         "chemical_symbols": atom_order,
     }
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    nequip_calc = NequIPCalculator.from_deployed_model(
-        model_str,
-        set_global_options=True,
-        device=device,
-        species_to_type_name={s: s for s in config["chemical_symbols"]},
-    )
-    atoms.set_calculator(nequip_calc)
-
+    #nequip_calc = NequIPCalculator.from_deployed_model(
+    #    model_str,
+    #    set_global_options=True,
+    #    device=device,
+    #    species_to_type_name={s: s for s in config["chemical_symbols"]},
+    #)
+    #atoms.set_calculator(nequip_calc)
+    calc = mace_mp(model="large", device="cuda")
+    atoms.set_calculator(calc)
     hop = MinimaHopping(atoms, Ediff0=1.0, T0=4000.0)
     hop(totalsteps=100)
 
