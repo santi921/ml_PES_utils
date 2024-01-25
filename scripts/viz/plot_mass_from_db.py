@@ -97,18 +97,22 @@ def plot_db_minima(
 
 
 def main():
-    data_root = "/home/santiagovargas/dev/ml_PES_utils/data/bh_code_0913/*db"
-    minima_dbs = glob(data_root)
+    run = "2/low/"
+
+    data_root = (
+        "/home/santiagovargas/dev/ml_PES_utils/data/local_min_h_filter_1012/" + run
+    )
+    minima_dbs = glob(data_root + "*.db")
 
     for db in minima_dbs:
         raw_list = plot_db_minima(
             db,
-            max_plot=-1,
+            max_plot=250,
             orientation_str="270x,270y,0z",
             figsize=(20, 100),
         )
 
-        save_folder = "../../data/figures/"
+        save_folder = "../../data/figures_bh_filter_1012/" + run
         run_name = db.split("/")[-1].split(".")[0]
 
         print("model name: {}".format(run_name))

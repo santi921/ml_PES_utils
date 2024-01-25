@@ -4,6 +4,7 @@ from ase.calculators.emt import EMT
 from ase.ga.relax_attaches import VariansBreak
 import sys
 import json
+import torch
 
 from nequip.ase import NequIPCalculator
 
@@ -21,9 +22,11 @@ def main():
     config = {
         "chemical_symbols": atom_order,
     }
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     nequip_calc = NequIPCalculator.from_deployed_model(
         model_str,
         set_global_options=True,
+        device=device,
         species_to_type_name={s: s for s in config["chemical_symbols"]},
     )
 

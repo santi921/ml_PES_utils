@@ -1,6 +1,7 @@
 from random import random
 import json
 import argparse
+import torch
 
 from ase.io import write
 from ase.optimize import BFGS
@@ -39,12 +40,13 @@ def main():
     config = {
         "chemical_symbols": atom_order,
     }
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     nequip_calc = NequIPCalculator.from_deployed_model(
         model_str,
         set_global_options=True,
+        device=device,
         species_to_type_name={s: s for s in config["chemical_symbols"]},
     )
-
     # Initialize the different components of the GA
     da = DataConnection("gadb.db")
     atom_numbers_to_optimize = da.get_atom_numbers_to_optimize()
